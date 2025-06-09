@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-multipart
+pillow
+numpy
+pydantic
+aiohttp  
+tensorflow   
+opencv-python
+mtcnn
+prometheus-fastapi-instrumentator
+slowapi
+supabase
+python-dotenv
