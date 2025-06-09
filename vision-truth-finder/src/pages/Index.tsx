@@ -10,7 +10,7 @@ interface PredictionResult {
   confidence: number;
   prediction_id: string;
 }
-
+const URI = import.meta.env.PRODUCTION_SERVER;
 const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<PredictionResult | null>(null);
@@ -24,8 +24,7 @@ const Index = () => {
     try {
       const formData = new FormData();
       formData.append('file', file);
-
-      const response = await fetch('http://localhost:8000/predict', {
+      const response = await fetch(URI, {
         method: 'POST',
         body: formData,
       });
@@ -53,7 +52,7 @@ const Index = () => {
     if (!result) return;
 
     try {
-      const response = await fetch('http://localhost:8000/feedback', {
+      const response = await fetch(URI, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

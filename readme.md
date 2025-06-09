@@ -107,7 +107,7 @@ Upvote the model ⭐
 ### 3. Build and Run All Services
 
 ```bash
-cd projects
+cd project
 docker-compose up --build
 cd vision-truth-finder
 npm run dev
