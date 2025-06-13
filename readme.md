@@ -9,7 +9,11 @@
 A complete end-to-end AI/ML project to detect face-swapped deepfake videos using XceptionNet. Built with a scalable and production-ready architecture including a modern frontend, robust backend, containerized deployment, and observability stack.
 
 ---
+## 🕹️ Checkout the production code
 
+[Deepfake detection (Production)](https://github.com/Arman176001/Deepfake-detection-production)
+
+---
 ## 🔍 Overview
 
 Deepfakes pose a significant threat to digital authenticity. This project tackles the challenge by building a high-accuracy classifier to detect face-swapped deepfake videos using a convolutional neural network.
