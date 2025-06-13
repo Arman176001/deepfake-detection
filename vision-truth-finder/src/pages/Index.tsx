@@ -4,13 +4,14 @@ import { Card } from "@/components/ui/card";
 import { FileUpload } from "@/components/FileUpload";
 import { ResultDisplay } from "@/components/ResultDisplay";
 import { FeedbackForm } from "@/components/FeedbackForm";
+import { Github, ExternalLink, Coffee } from "lucide-react";
 
 interface PredictionResult {
   result: string;
   confidence: number;
   prediction_id: string;
 }
-const URI = import.meta.env.PRODUCTION_SERVER;
+
 const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<PredictionResult | null>(null);
@@ -24,7 +25,8 @@ const Index = () => {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const response = await fetch(URI, {
+
+      const response = await fetch("http://localhost:8000/predict", {  
         method: 'POST',
         body: formData,
       });
@@ -52,7 +54,7 @@ const Index = () => {
     if (!result) return;
 
     try {
-      const response = await fetch(URI, {
+      const response = await fetch("http://localhost:8000/feedback", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +89,7 @@ const Index = () => {
           <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent mb-4">
             Deepfake Detector
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
             Upload an image or video to detect if it contains deepfake content using advanced AI technology
           </p>
         </div>
@@ -137,6 +139,45 @@ const Index = () => {
             </Card>
           )}
         </div>
+      </div>
+
+      {/* Fixed Social Links - Bottom Right */}
+      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+        <a
+          href="https://github.com/Arman176001/deepfake-detection"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group w-12 h-12 bg-muted/80 backdrop-blur-sm hover:bg-muted rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:w-24 shadow-lg"
+        >
+          <Github className="w-5 h-5 text-foreground group-hover:mr-2 transition-all duration-300" />
+          <span className="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+            GitHub
+          </span>
+        </a>
+        
+        <a
+          href="https://www.kaggle.com/models/armanchaudhary/xception5o"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group w-12 h-12 bg-muted/80 backdrop-blur-sm hover:bg-muted rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:w-20 shadow-lg"
+        >
+          <ExternalLink className="w-5 h-5 text-foreground group-hover:mr-2 transition-all duration-300" />
+          <span className="text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+            Model
+          </span>
+        </a>
+        
+        <a
+          href="https://buymeacoffee.com/arman176"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group w-12 h-12 bg-yellow-500/20 backdrop-blur-sm hover:bg-yellow-500/30 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 hover:w-20 shadow-lg"
+        >
+          <Coffee className="w-5 h-5 text-yellow-600 dark:text-yellow-400 group-hover:mr-2 transition-all duration-300" />
+          <span className="text-sm font-medium text-yellow-600 dark:text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap overflow-hidden">
+            Coffee
+          </span>
+        </a>
       </div>
     </div>
   );
