@@ -1,4 +1,3 @@
-.env
 /__pycache__
 /grafana
 /model/xception_5o.h5
