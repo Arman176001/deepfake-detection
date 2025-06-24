@@ -88,7 +88,7 @@ Deepfakes pose a significant threat to digital authenticity. This project tackle
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Arman17625/deepfake-detector
+git clone https://github.com/Arman17625/deepfake-detection
 cd deepfake-detector
 ```
 
