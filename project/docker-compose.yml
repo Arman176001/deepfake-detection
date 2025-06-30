@@ -2,7 +2,7 @@ version: '3'
 
 services:
   model_api:
-    build: .
+    image: arman17625/project-model_api
     ports:
       - "8000:8000"
     depends_on:

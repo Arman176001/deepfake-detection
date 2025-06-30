@@ -30,13 +30,16 @@ Deepfakes pose a significant threat to digital authenticity. This project tackle
 ├── project/                     # FastAPI server
 ├── vision-truth-finder/         # React (Vite) client
 ├── test/                        # Test image: REAL and video:Fake
-├── project/model/               # XceptionNet model + training code
+├── project/model/               # XceptionNet model
 ├── project/docker-compose.yml   # Docker orchestration
 ├── project/Dockerfile           # Backend Dockerfile
 ├── project/nginx/               # NGINX reverse proxy config
 ├── project/prometheus/          # Prometheus config
 ├── project/.env                 # Environment variables
-└── README.md
+├── README.md
+├── .gitignore
+├── LICENSE
+└── run.sh 
 ```
 
 ---
@@ -89,35 +92,25 @@ Deepfakes pose a significant threat to digital authenticity. This project tackle
 
 ```bash
 git clone https://github.com/Arman17625/deepfake-detection
-cd deepfake-detector
 ```
 
-### 2. Set up Environment Variables
-
-Create a `.env` file in the project directory:
-
-```env
-MODEL_PATH=/app/model/xception_model.h5
-```
-
-The model can be downloaded from [Kaggle](https://www.kaggle.com/models/armanchaudhary/xception5o) 
-
-Upvote the model ⭐
-
-### 3. Build and Run All Services
+### 2. Build and Run All Services
 
 ```bash
-cd project
-docker-compose up --build
-cd vision-truth-finder
-npm run dev
+./run.sh start
 ```
 
-### 4. Access the Services
+### 3. Access the Services
 
 * Frontend: [http://localhost:8080](http://localhost:3000)
 * Backend: [http://localhost:8000/docs](http://localhost:8000/docs)
 * Grafana: [http://localhost:3000](http://localhost:3000) (default login: `admin/admin`)
+
+### 4. Stop all Services
+
+```bash
+./run.sh stop
+```
 
 ---
 
@@ -136,6 +129,11 @@ npm run dev
 | Accuracy      | 91.76%    |
 | Training Time | \~2 hours |
 | Hardware      | 2×T4 GPUs |
+
+The model can be downloaded from [Kaggle](https://www.kaggle.com/models/armanchaudhary/xception5o) 
+
+Upvote the model ⭐
+
 
 ---
 
