@@ -12,6 +12,8 @@ PID_FILE=".serve_pid"
 
 # Function to start the app
 start_app() {
+  DEFAULT_PORT=8080
+  PORT=${2:-$DEFAULT_PORT}
   echo -e "${YELLOW}🧱 Building Vite frontend...${RESET}"
   cd "$FRONTEND_DIR"
   npm install
@@ -23,10 +25,10 @@ start_app() {
   docker-compose up --detach
   cd ..
 
-  echo -e "${YELLOW}🌐 Serving frontend on http://localhost:8080...${RESET}"
+  echo -e "${YELLOW}🌐 Serving frontend on http://localhost:${PORT}...${RESET}"
   cd "$FRONTEND_DIR"
-  nohup npm run preview -- --port 8080 > ../frontend.log 2>&1 &
-  echo $! > ../$PID_FILE
+  nohup npm run preview -- --port "${PORT}" > ../frontend.log 2>&1 &
+  echo "$PORT:$!" > ../$PID_FILE
   cd ..
 
   echo -e "${GREEN}✅ App started successfully!${RESET}"
@@ -41,7 +43,7 @@ stop_app() {
 
   # Stop frontend with improved process handling
   if [ -f "$PID_FILE" ]; then
-    SERVE_PID=$(cat "$PID_FILE")
+    IFS=":" read PORT SERVE_PID < "$PID_FILE"
     if ps -p "$SERVE_PID" > /dev/null 2>&1; then
       echo -e "${YELLOW}🧼 Stopping Vite preview (PID $SERVE_PID)...${RESET}"
       
@@ -55,8 +57,7 @@ stop_app() {
           break
         fi
         sleep 1
-      done
-      
+      done     
       # If still running, force kill
       if ps -p "$SERVE_PID" > /dev/null 2>&1; then
         echo -e "${YELLOW}⚠️ Graceful shutdown failed, force killing...${RESET}"
@@ -77,13 +78,13 @@ stop_app() {
     echo -e "${YELLOW}⚠️ No PID file found${RESET}"
   fi
 
-  # Additional cleanup: kill any remaining processes on port 8080
-  echo -e "${YELLOW}🔍 Checking for any remaining processes on port 8080...${RESET}"
-  PORT_PID=$(lsof -ti:8080 2>/dev/null)
+  # Additional cleanup: kill any remaining processes on port
+  echo -e "${YELLOW}🔍 Checking for any remaining processes on port $PORT...${RESET}"
+  PORT_PID=$(lsof -ti:$PORT 2>/dev/null)
   if [ ! -z "$PORT_PID" ]; then
-    echo -e "${YELLOW}Found process $PORT_PID on port 8080, killing it...${RESET}"
+    echo -e "${YELLOW}Found process $PORT_PID on port $PORT, killing it...${RESET}"
     kill -KILL $PORT_PID 2>/dev/null
-    echo -e "${GREEN}✅ Port 8080 cleaned up${RESET}"
+    echo -e "${GREEN}✅ Port $PORT cleaned up${RESET}"
   fi
 
   echo -e "${GREEN}🧹 Clean shutdown complete${RESET}"
@@ -105,7 +106,8 @@ status_app() {
   
   # Check frontend
   if [ -f "$PID_FILE" ]; then
-    SERVE_PID=$(cat "$PID_FILE")
+    IFS=":" read PORT SERVE_PID < "$PID_FILE"
+
     if ps -p "$SERVE_PID" > /dev/null 2>&1; then
       echo -e "${GREEN}✅ Frontend running (PID $SERVE_PID)${RESET}"
     else
@@ -116,26 +118,38 @@ status_app() {
     echo -e "${RED}❌ Frontend not running (no PID file)${RESET}"
   fi
   
-  # Check port 8080
-  if lsof -ti:8080 > /dev/null 2>&1; then
-    echo -e "${GREEN}✅ Port 8080 is in use${RESET}"
+  # Check port
+  if lsof -ti:$PORT > /dev/null 2>&1; then
+    echo -e "${GREEN}✅ Port $PORT is in use${RESET}"
   else
-    echo -e "${RED}❌ Port 8080 is free${RESET}"
+    echo -e "${RED}❌ Port $PORT is free${RESET}"
   fi
 }
 
 # Function to restart the app
 restart_app() {
   echo -e "${YELLOW}🔄 Restarting application...${RESET}"
+
+  if [ -f "$PID_FILE" ]; then
+    IFS=":" read SAVED_PORT _ < "$PID_FILE"
+  else
+    SAVED_PORT=""
+  fi
+
   stop_app
   sleep 2
-  start_app
+
+  if [ -n "$SAVED_PORT" ]; then
+    start_app "start" "$SAVED_PORT"
+  else
+    start_app
+  fi
 }
 
 # Entry point
 case "$1" in
   start)
-    start_app
+    start_app "$@"
     ;;
   stop)
     stop_app
