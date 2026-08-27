@@ -132,7 +132,7 @@ git clone https://github.com/Arman17625/deepfake-detection
 
 The model can be downloaded from [Kaggle](https://www.kaggle.com/models/armanchaudhary/xception5o) 
 
-Upvote the model ⭐
+Upvote the model ⭐!
 
 
 ---
